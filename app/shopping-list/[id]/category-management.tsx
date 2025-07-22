@@ -194,7 +194,11 @@ function CategoryItem({
       <div className="flex items-center justify-between gap-x-2 p-2">
         <div className="flex items-center gap-x-2">
           <div className="bg-neutral-100 p-1">
-            <GripVertical {...listeners} size={18} className="cursor-grab text-neutral-400" />
+            <GripVertical
+              {...listeners}
+              size={18}
+              className="cursor-grab touch-none text-neutral-400"
+            />
           </div>
           <div className="text-md">{name}</div>
         </div>
