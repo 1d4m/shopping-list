@@ -39,6 +39,7 @@ import { useParams } from 'next/navigation';
 import { getLocalStorage, localStorageKey, setLocalStorage } from '@/lib/localStorage';
 import { ShoppingCategoryModel, ShoppingItemModel, ShoppingListModel } from '@/types/shopping-list';
 import { ShareDialog } from './share-dialog';
+import { useShoppingList } from '@/components/hooks/useShoppingList';
 
 const modes = {
   CATEGORY_MANAGEMENT: 'category_management',
@@ -55,6 +56,7 @@ export default function ShoppingListPage() {
   const [title, setTitle] = useState('');
   const [shareId, setShareId] = useState<string | null>(null); // shareId
   const [shareDialog, setShareDialog] = useState(false);
+  const { name, getShoppingList } = useShoppingList();
 
   // TODO: 共有機能を追加
   const shareShoppingList = async (shareId: string) => {
@@ -320,6 +322,10 @@ export default function ShoppingListPage() {
     loadShoppingList();
   }, [params.id]);
 
+  useEffect(() => {
+    getShoppingList(params.id as string);
+  }, []);
+
   if (mode === modes.CHECK_LIST) {
     return (
       <>
@@ -329,7 +335,7 @@ export default function ShoppingListPage() {
             <Link href="/shopping-list" className="text-sm underline">
               <ChevronLeft />
             </Link>
-            <div className="font-bold">{title}</div>
+            <div className="font-bold">{name}</div>
           </div>
           <div className="flex items-center gap-x-4">
             <button onClick={() => setOpenAddItemDialog(true)}>
