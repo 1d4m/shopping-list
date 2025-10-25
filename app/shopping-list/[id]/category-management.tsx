@@ -175,12 +175,17 @@ function CategoryItem({
   const [value, setValue] = useState(name);
   const [isEdit, setIsEdit] = useState(false);
 
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: item.id,
   });
 
   const style = {
-    transform: CSS.Transform.toString(transform),
+    transform: CSS.Transform.toString(
+      transform
+        ? { ...transform, x: 0 } // ← 横方向を固定
+        : null,
+    ),
+    opacity: isDragging ? 0.5 : 1, // ← ドラッグ中は半透明に
     transition,
   };
 
