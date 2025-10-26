@@ -1,0 +1,4 @@
+- domain
+  - domain固有のコンポーネント
+- ui
+  - uiコンポーネント（shadcn）
