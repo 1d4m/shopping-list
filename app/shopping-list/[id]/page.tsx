@@ -39,7 +39,7 @@ import { useParams } from 'next/navigation';
 import { getLocalStorage, localStorageKey, setLocalStorage } from '@/lib/localStorage';
 import { ShoppingCategoryModel, ShoppingItemModel, ShoppingListModel } from '@/types/shopping-list';
 import { ShareDialog } from './share-dialog';
-import { useShoppingList } from '@/components/hooks/useShoppingList';
+import { useShoppingList } from '@//hooks/useShoppingList';
 
 const modes = {
   CATEGORY_MANAGEMENT: 'category_management',
@@ -326,6 +326,9 @@ export default function ShoppingListPage() {
     getShoppingList(params.id as string);
   }, []);
 
+  // その他を表示するのは、カテゴリが未設定かつ、categoriesに含まれるidがリスト内のアイテムに設定されていない場合
+  const a = list.some((item) => categories.some((c) => c.id === item.categoryId));
+
   if (mode === modes.CHECK_LIST) {
     return (
       <>
@@ -365,13 +368,26 @@ export default function ShoppingListPage() {
             {list.map((item, index) => (
               <div key={index}>
                 {list[index - 1]?.categoryId !== item.categoryId && (
-                  <div className="relative my-5 h-[1px] w-full bg-neutral-200">
-                    <div className="absolute top-1/2 left-0 flex h-4 w-full -translate-y-1/2 items-center justify-start">
-                      <div className="rounded bg-white px-2 py-0.5 text-[13px] text-neutral-500">
-                        {categories.find((c) => c.id === item.categoryId)?.name ?? 'その他'}
+                  <>
+                    {a && !categories.find((c) => c.id === item.categoryId)?.name && (
+                      <div className="relative my-5 h-[1px] w-full bg-neutral-200">
+                        <div className="absolute top-1/2 left-0 flex h-4 w-full -translate-y-1/2 items-center justify-start">
+                          <div className="rounded bg-white px-2 py-0.5 text-[13px] text-neutral-500">
+                            その他
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
+                    )}
+                    {categories.find((c) => c.id === item.categoryId)?.name && (
+                      <div className="relative my-5 h-[1px] w-full bg-neutral-200">
+                        <div className="absolute top-1/2 left-0 flex h-4 w-full -translate-y-1/2 items-center justify-start">
+                          <div className="rounded bg-white px-2 py-0.5 text-[13px] text-neutral-500">
+                            {categories.find((c) => c.id === item.categoryId)?.name}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </>
                 )}
                 <CheckListItem
                   data={item}
